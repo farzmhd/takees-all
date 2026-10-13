@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="en">
 
 <head>
@@ -10,7 +10,6 @@
   <link rel="canonical" href="https://takees.in/ai-tools/">
 
   <!-- Stylesheets -->
-  <script src="js/theme-init.js"></script>
   <link rel="stylesheet" href="css/style.css">
   <link rel="stylesheet" href="css/responsive.css">
 
@@ -43,12 +42,6 @@
       </nav>
 
       <!-- Mobile Hamburger Button -->
-      <button class="theme-toggle" id="themeToggle" type="button" aria-label="Switch to dark mode" aria-pressed="false">
-        <span class="theme-toggle-icon theme-toggle-sun" aria-hidden="true">&#9728;</span>
-        <span class="theme-toggle-track" aria-hidden="true"><span class="theme-toggle-thumb"></span></span>
-        <span class="theme-toggle-icon theme-toggle-moon" aria-hidden="true">&#9790;</span>
-      </button>
-
       <button class="menu-toggle" id="menuToggle" aria-label="Toggle Navigation Menu" aria-expanded="false">
         <span></span>
         <span></span>
@@ -381,8 +374,15 @@
         <div class="ai-directory-card" data-category="video" data-keywords="luma video text2video motion physics generation">
           <div class="ai-card-top-row">
             <div class="ai-card-brand-group">
-              <div class="ai-card-logo" style="background: #000000; border: 1px solid #222222;">
-                <img src="assets/logos/luma.png" alt="Luma Dream Machine logo">
+              <div class="ai-card-logo ai-card-logo--luma" style="background: #000000; border: 1px solid #222222;">
+                <img src="assets/logos/luma.png" alt="Luma Dream Machine logo"
+                  onerror="this.hidden = true; this.nextElementSibling.hidden = false;">
+                <svg class="ai-card-logo-fallback" viewBox="0 0 48 48" role="img"
+                  aria-label="Luma Dream Machine logo" hidden>
+                  <path fill="#c8c8c8" d="M6 15 24 4v20L6 35z"></path>
+                  <path fill="#ffffff" d="m6 35 18-11v20z"></path>
+                  <path fill="#c8c8c8" d="m24 24 17 11-17 9z"></path>
+                </svg>
               </div>
               <div class="ai-card-title-group">
                 <h3 class="ai-card-tool-name">Luma Dream Machine</h3>
@@ -698,10 +698,10 @@
         <div>
           <h4 class="footer-col-title">LOCATIONS</h4>
           <ul class="footer-links">
-            <li><a href="contact.html#whereToFind" class="footer-link">Digital Marketing Kannur</a></li>
-            <li><a href="contact.html#whereToFind" class="footer-link">Digital Marketing Bangalore</a></li>
-            <li><a href="contact.html#whereToFind" class="footer-link">Digital Marketing Kochi</a></li>
-            <li><a href="contact.html#whereToFind" class="footer-link">Digital Marketing Calicut</a></li>
+            <li><a href="index.html" class="footer-link">Digital Marketing Kannur</a></li>
+            <li><a href="../takees bglr anti/index.html" class="footer-link">Digital Marketing Bangalore</a></li>
+            <li><a href="../takees kochi/index.html" class="footer-link">Digital Marketing Kochi</a></li>
+            <li><a href="#" class="footer-link">Digital Marketing Calicut</a></li>
           </ul>
         </div>
       </div>

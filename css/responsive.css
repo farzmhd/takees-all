@@ -80,8 +80,13 @@
   }
 
   /* Navigation Drawer for Tablet/Mobile */
+  .nav-container {
+    grid-template-columns: auto 1fr auto;
+  }
+
   .menu-toggle {
     display: flex;
+    justify-self: end;
   }
 
   .nav-menu {

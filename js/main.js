@@ -4,7 +4,8 @@
  */
 
 document.addEventListener('DOMContentLoaded', () => {
-  initThemeToggle();
+  clearLegacyThemePreference();
+  initClients();
   initNavigation();
   initFaqAccordion();
   initFormValidation();
@@ -21,89 +22,59 @@ document.addEventListener('DOMContentLoaded', () => {
   initParallaxEffects();
 });
 
+function clearLegacyThemePreference() {
+  try {
+    localStorage.removeItem('takees-theme');
+  } catch (error) {
+    console.warn('Unable to clear the saved theme preference.', error);
+  }
+}
+
 /**
- * Persistent color theme toggle with direction-aware navbar visibility.
+ * Toggle visibility of all client logos.
  */
-function initThemeToggle() {
-  const toggle = document.getElementById('themeToggle');
-  if (!toggle) return;
+function initClients() {
+  const grid = document.getElementById('clientsGrid');
+  const toggle = document.getElementById('clientsToggle');
+  const results = document.getElementById('clientsResults');
+  const panel = document.getElementById('clientsGridPanel');
+  const section = document.getElementById('clients');
+  if (!grid || !toggle || !results || !panel || !section) return;
 
-  const root = document.documentElement;
-  let transitionTimer;
-  let previousScrollY = window.scrollY;
-  let scrollDirection = 0;
-  let directionDistance = 0;
-  let scrollFrame = 0;
+  const cards = Array.from(grid.querySelectorAll('.client-logo'));
+  let isExpanded = false;
 
-  const applyTheme = (theme, save = true) => {
-    const isDark = theme === 'dark';
-    root.classList.add('theme-transition');
-
-    if (isDark) {
-      root.dataset.theme = 'dark';
-    } else {
-      delete root.dataset.theme;
+  cards.forEach(card => {
+    const logo = card.querySelector('img');
+    if (logo) {
+      card.tabIndex = 0;
+      card.setAttribute('aria-label', logo.alt);
     }
+  });
 
-    toggle.setAttribute('aria-pressed', String(isDark));
-    toggle.setAttribute('aria-label', isDark ? 'Switch to light mode' : 'Switch to dark mode');
-
-    if (save) {
-      try {
-        localStorage.setItem('takees-theme', isDark ? 'dark' : 'light');
-      } catch {
-        // Keep the current-page theme when storage is unavailable.
-      }
-    }
-
-    window.clearTimeout(transitionTimer);
-    transitionTimer = window.setTimeout(() => {
-      root.classList.remove('theme-transition');
-    }, 420);
+  const updateDisclosure = expanded => {
+    isExpanded = expanded;
+    toggle.setAttribute('aria-expanded', String(expanded));
+    toggle.textContent = expanded ? 'Hide Clients' : 'Show Clients';
+    results.textContent = expanded
+      ? `Showing all ${cards.length} clients`
+      : 'Click Show Clients to view our clients';
+    panel.setAttribute('aria-hidden', String(!expanded));
+    panel.classList.toggle('is-expanded', expanded);
+    panel.inert = !expanded;
+    section.classList.toggle('is-collapsed', !expanded);
+    panel.style.removeProperty('height');
   };
 
-  applyTheme(root.dataset.theme === 'dark' ? 'dark' : 'light', false);
+  updateDisclosure(isExpanded);
 
   toggle.addEventListener('click', () => {
-    applyTheme(root.dataset.theme === 'dark' ? 'light' : 'dark');
-  });
-
-  toggle.addEventListener('keydown', event => {
-    if (event.key === 'Escape') toggle.blur();
-  });
-
-  window.addEventListener('scroll', () => {
-    if (scrollFrame) return;
-
-    scrollFrame = window.requestAnimationFrame(() => {
-      const currentScrollY = window.scrollY;
-      const delta = currentScrollY - previousScrollY;
-      previousScrollY = currentScrollY;
-
-      if (currentScrollY <= 32) {
-        toggle.classList.remove('is-scroll-hidden');
-        scrollDirection = 0;
-        directionDistance = 0;
-      } else if (Math.abs(delta) >= 2) {
-        const nextDirection = Math.sign(delta);
-
-        if (nextDirection !== scrollDirection) {
-          scrollDirection = nextDirection;
-          directionDistance = delta;
-        } else {
-          directionDistance += delta;
-        }
-
-        if (directionDistance >= 12) {
-          toggle.classList.add('is-scroll-hidden');
-        } else if (directionDistance <= -12) {
-          toggle.classList.remove('is-scroll-hidden');
-        }
-      }
-
-      scrollFrame = 0;
+    cards.forEach(card => {
+      card.hidden = false;
     });
-  }, { passive: true });
+    toggle.classList.add('is-active');
+    updateDisclosure(!isExpanded);
+  });
 }
 
 /**
@@ -1057,4 +1028,3 @@ function initCanvas2DAurora(card, canvas) {
   lastTime = performance.now();
   loop(lastTime);
 }
-
