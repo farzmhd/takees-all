@@ -381,7 +381,7 @@ function initHeroHeadlineReveal() {
  * 2. Hero Background Glow
  */
 function initHeroBackgroundAccents() {
-  const heroes = document.querySelectorAll('.home-hero, .dark-hero');
+  const heroes = document.querySelectorAll('.dark-hero');
   if (!heroes.length) return;
 
   heroes.forEach(hero => {
@@ -539,86 +539,16 @@ function initParallaxEffects() {
 }
 
 function initHeroImageMotion() {
+  // All animations disabled on home-hero as requested
   const hero = document.querySelector('.home-hero');
-  if (!hero) return;
-
-  const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-  const heading = hero.querySelector('.hero-heading');
-  if (!reducedMotion && heading) {
-    const updateHeadingLines = () => {
-      const lineCount = wrapHomeHeroHeadingByLine(heading);
-      const headingDelay = 800;
-      const lineStagger = 120;
-      const transitionDuration = 800;
-      const descriptionDelay = headingDelay + (lineCount - 1) * lineStagger + transitionDuration + 80;
-
-      hero.style.setProperty('--hero-description-delay', `${descriptionDelay}ms`);
-      hero.style.setProperty('--hero-button-delay', `${descriptionDelay + transitionDuration + 120}ms`);
-    };
-
-    updateHeadingLines();
-    let resizeFrame = 0;
-    window.addEventListener('resize', () => {
-      cancelAnimationFrame(resizeFrame);
-      resizeFrame = requestAnimationFrame(updateHeadingLines);
-    }, { passive: true });
-  }
-
-  const revealHero = () => {
+  if (hero) {
     hero.classList.remove('is-hero-reveal-pending');
     hero.classList.add('is-hero-revealed');
-  };
-
-  if (reducedMotion || !('IntersectionObserver' in window)) {
-    revealHero();
-  } else {
-    hero.classList.add('is-hero-reveal-pending');
-    const observer = new IntersectionObserver((entries, obs) => {
-      entries.forEach(entry => {
-        if (entry.isIntersecting) {
-          revealHero();
-          obs.unobserve(hero);
-        }
-      });
-    }, { threshold: 0.12 });
-    observer.observe(hero);
   }
 }
 
 function initHeroBannerParallax() {
-  const banner = document.querySelector('#homeHero .hero-brand-card');
-  const image = banner?.querySelector('.hero-brand-image');
-  const finePointer = window.matchMedia('(hover: hover) and (pointer: fine)').matches;
-  const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-  if (!banner || !image || !finePointer || reducedMotion) return;
-
-  let frame = 0;
-  let pointerX = 0;
-  let pointerY = 0;
-
-  banner.addEventListener('pointermove', event => {
-    if (event.pointerType !== 'mouse') return;
-
-    pointerX = event.clientX;
-    pointerY = event.clientY;
-    if (frame) return;
-
-    frame = requestAnimationFrame(() => {
-      frame = 0;
-      const bounds = banner.getBoundingClientRect();
-      const offsetX = ((pointerX - bounds.left) / bounds.width - 0.5) * 10;
-      const offsetY = ((pointerY - bounds.top) / bounds.height - 0.5) * 10;
-      image.style.setProperty('--hero-parallax-x', `${offsetX.toFixed(2)}px`);
-      image.style.setProperty('--hero-parallax-y', `${offsetY.toFixed(2)}px`);
-    });
-  });
-
-  banner.addEventListener('pointerleave', () => {
-    if (frame) cancelAnimationFrame(frame);
-    frame = 0;
-    image.style.setProperty('--hero-parallax-x', '0px');
-    image.style.setProperty('--hero-parallax-y', '0px');
-  });
+  // Parallax disabled on home-hero as requested
 }
 
 function wrapHomeHeroHeadingByLine(heading) {

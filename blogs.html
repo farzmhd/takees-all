@@ -16,6 +16,315 @@
   <!-- Favicon -->
   <link rel="icon" type="image/svg+xml"
     href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' rx='8' fill='%235b2bb5'/><text x='16' y='22' fill='%23ffffff' font-size='18' font-weight='800' font-family='sans-serif' text-anchor='middle'>t</text></svg>">
+  <style>
+    .blog-article-dialog {
+      position: fixed;
+      inset: 0;
+      display: none;
+      width: 100vw;
+      height: 100vh;
+      height: 100dvh;
+      max-width: none;
+      max-height: none;
+      padding: 0;
+      border: 0;
+      overflow: hidden;
+      background: #f7f6fa;
+      color: #201b29;
+    }
+
+    .blog-article-dialog[open] {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .blog-article-dialog::backdrop {
+      background: rgba(15, 12, 22, 0.88);
+    }
+
+    .blog-article-dialog-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      min-height: 68px;
+      padding: 12px clamp(16px, 4vw, 56px);
+      border-bottom: 1px solid #ebe8f0;
+      background: #fff;
+    }
+
+    .blog-article-dialog-back,
+    .blog-article-dialog-close {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 44px;
+      border: 0;
+      cursor: pointer;
+    }
+
+    .blog-article-dialog-back {
+      gap: 8px;
+      padding: 8px 12px;
+      border-radius: 8px;
+      color: #5b2bb5;
+      background: transparent;
+      font: inherit;
+      font-size: 14px;
+      font-weight: 600;
+    }
+
+    .blog-article-dialog-back:hover {
+      background: #f4effb;
+    }
+
+    .blog-article-dialog-brand {
+      color: #5b2bb5;
+      font-size: 14px;
+      font-weight: 800;
+      letter-spacing: 0.14em;
+    }
+
+    .blog-article-dialog-close {
+      flex: 0 0 44px;
+      width: 44px;
+      border: 1px solid #e6e1ec;
+      border-radius: 50%;
+      color: #302a38;
+      background: #fff;
+      font-size: 24px;
+      line-height: 1;
+    }
+
+    .blog-article-dialog-close:hover {
+      border-color: #5b2bb5;
+      color: #5b2bb5;
+    }
+
+    .blog-article-reader {
+      flex: 1;
+      min-height: 0;
+      overflow-y: auto;
+      overscroll-behavior: contain;
+      scroll-behavior: smooth;
+    }
+
+    .blog-article-reader-inner {
+      width: min(820px, calc(100% - 40px));
+      margin: 0 auto;
+      padding: clamp(36px, 7vh, 76px) 0 80px;
+    }
+
+    .blog-article-reader-eyebrow {
+      margin: 0 0 18px;
+      color: #5b2bb5;
+      font-size: 12px;
+      font-weight: 700;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+    }
+
+    .blog-article-reader-meta {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 18px;
+    }
+
+    .blog-article-reader-category {
+      padding: 6px 11px;
+      border-radius: 999px;
+      color: #5b2bb5;
+      background: #eee7f8;
+      font-size: 12px;
+      font-weight: 700;
+    }
+
+    .blog-article-reader-date {
+      color: #6d6875;
+      font-size: 13px;
+    }
+
+    .blog-article-reader-title {
+      margin: 0;
+      color: #211a2b;
+      font-size: clamp(32px, 5vw, 56px);
+      font-weight: 750;
+      letter-spacing: -0.045em;
+      line-height: 1.12;
+      overflow-wrap: anywhere;
+    }
+
+    .blog-article-reader-cover {
+      position: relative;
+      width: 100%;
+      aspect-ratio: 16 / 10;
+      max-height: 430px;
+      margin: 34px 0 42px;
+      overflow: hidden;
+      border-radius: 18px;
+      background: #ffffff;
+      border: 1px solid #edf0f5;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 30px;
+    }
+
+    .blog-article-reader-cover::after {
+      display: none;
+    }
+
+    .blog-article-reader-image {
+      display: block;
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+      background: #ffffff;
+    }
+
+    .blog-article-reader-content {
+      color: #393441;
+      font-size: 17px;
+      line-height: 1.85;
+      overflow-wrap: anywhere;
+    }
+
+    .blog-article-reader-content > :first-child {
+      margin-top: 0;
+    }
+
+    .blog-article-reader-content h2,
+    .blog-article-reader-content h3,
+    .blog-article-reader-content h4 {
+      margin: 2em 0 0.7em;
+      color: #211a2b;
+      font-weight: 700;
+      letter-spacing: -0.025em;
+      line-height: 1.25;
+    }
+
+    .blog-article-reader-content h2 {
+      font-size: clamp(24px, 3vw, 32px);
+    }
+
+    .blog-article-reader-content h3 {
+      font-size: 23px;
+    }
+
+    .blog-article-reader-content h4 {
+      font-size: 19px;
+    }
+
+    .blog-article-reader-content p,
+    .blog-article-reader-content ul,
+    .blog-article-reader-content ol,
+    .blog-article-reader-content blockquote,
+    .blog-article-reader-content table,
+    .blog-article-reader-content figure {
+      margin: 0 0 1.25em;
+    }
+
+    .blog-article-reader-content ul,
+    .blog-article-reader-content ol {
+      padding-left: 1.5em;
+    }
+
+    .blog-article-reader-content li {
+      margin-bottom: 0.5em;
+      padding-left: 0.25em;
+    }
+
+    .blog-article-reader-content a {
+      color: #5b2bb5;
+      text-decoration: underline;
+      text-underline-offset: 3px;
+    }
+
+    .blog-article-reader-content blockquote {
+      padding: 16px 20px;
+      border-left: 3px solid #5b2bb5;
+      border-radius: 0 10px 10px 0;
+      background: #eee9f5;
+    }
+
+    .blog-article-reader-content img {
+      max-width: 100%;
+      height: auto;
+      border-radius: 12px;
+    }
+
+    .blog-article-reader-content table {
+      display: block;
+      width: 100%;
+      overflow-x: auto;
+      border-collapse: collapse;
+    }
+
+    .blog-article-reader-content th,
+    .blog-article-reader-content td {
+      padding: 10px 12px;
+      border: 1px solid #e2dce9;
+      text-align: left;
+    }
+
+    .blog-article-reader-content th {
+      background: #f0ecf5;
+      color: #211a2b;
+    }
+
+    .blog-article-reader-status {
+      padding: 24px;
+      border: 1px solid #e7e1ee;
+      border-radius: 12px;
+      background: #fff;
+      color: #514b59;
+    }
+
+    .blog-article-reader-status button {
+      margin-top: 12px;
+      padding: 10px 16px;
+      border: 0;
+      border-radius: 8px;
+      color: #fff;
+      background: #5b2bb5;
+      font: inherit;
+      font-weight: 600;
+      cursor: pointer;
+    }
+
+    @media (max-width: 600px) {
+      .blog-article-dialog-header {
+        min-height: 60px;
+        padding: 8px 12px;
+      }
+
+      .blog-article-dialog-brand {
+        font-size: 12px;
+      }
+
+      .blog-article-dialog-back {
+        padding: 8px 6px;
+        font-size: 13px;
+      }
+
+      .blog-article-reader-inner {
+        width: min(100% - 32px, 820px);
+        padding-top: 36px;
+      }
+
+      .blog-article-reader-cover {
+        margin: 26px 0 32px;
+        border-radius: 12px;
+      }
+
+      .blog-article-reader-content {
+        font-size: 16px;
+        line-height: 1.8;
+      }
+    }
+  </style>
 </head>
 
 <body>
@@ -69,154 +378,273 @@
       <!-- Filter Buttons -->
       <div class="blog-filters">
         <button class="filter-btn active" data-filter="all">All Articles</button>
-        <button class="filter-btn" data-filter="seo">SEO</button>
+        <button class="filter-btn" data-filter="seo">SEO &amp; Growth</button>
         <button class="filter-btn" data-filter="social">Social Media</button>
         <button class="filter-btn" data-filter="ads">Paid Ads</button>
-        <button class="filter-btn" data-filter="web">Web Development</button>
         <button class="filter-btn" data-filter="ai">AI Marketing</button>
       </div>
 
       <!-- Blogs Grid -->
       <div class="blogs-grid-3">
-        <!-- Blog 1 (Primary Link to Blog Details) -->
+        <!-- Blog 1: May 26, 2026 - Instagram Carousel Captions -->
+        <article class="blog-card" data-category="social">
+          <div class="blog-thumb-box">
+            <img src="assets/images/blogs/instagram-carousel-captions.svg"
+              alt="Instagram Carousel Captions"
+              class="blog-thumb-img" loading="lazy">
+          </div>
+          <div class="blog-content">
+            <div class="blog-meta-row">
+              <span class="blog-category-tag">Social Media</span>
+              <span class="blog-date">May 26, 2026</span>
+            </div>
+            <h2 class="blog-item-title">
+              <a href="https://takees.in/instagram-carousel-captions/">Instagram Carousel Captions Are Finally Here | New Update</a>
+            </h2>
+            <p class="blog-item-excerpt">
+              Discover how Instagram carousel captions improve storytelling, engagement, branding, and audience interaction. Read More!
+            </p>
+            <a href="https://takees.in/instagram-carousel-captions/" class="blog-read-link">
+              Read Article <span class="btn-arrow-icon">↗</span>
+            </a>
+          </div>
+        </article>
+
+        <!-- Blog 2: May 19, 2026 - Instagram Instants -->
+        <article class="blog-card" data-category="social">
+          <div class="blog-thumb-box">
+            <img src="assets/images/blogs/instagram-instants.svg"
+              alt="Instagram Instants: Know About Instagram’s New Feature"
+              class="blog-thumb-img" loading="lazy">
+          </div>
+          <div class="blog-content">
+            <div class="blog-meta-row">
+              <span class="blog-category-tag">Social Media</span>
+              <span class="blog-date">May 19, 2026</span>
+            </div>
+            <h2 class="blog-item-title">
+              <a href="https://takees.in/instagram-instants/">Instagram Instants: Know About Instagram's New Feature</a>
+            </h2>
+            <p class="blog-item-excerpt">
+              Instagram Instants is Instagram's exciting new feature that lets you share real, unedited photos that disappear after being viewed. Check out more!
+            </p>
+            <a href="https://takees.in/instagram-instants/" class="blog-read-link">
+              Read Article <span class="btn-arrow-icon">↗</span>
+            </a>
+          </div>
+        </article>
+
+        <!-- Blog 3: Mar 12, 2026 - Meta Ads New Targeting Update -->
+        <article class="blog-card" data-category="ads">
+          <div class="blog-thumb-box">
+            <img src="assets/images/blogs/meta-ads-new-targeting-update.svg"
+              alt="Meta Ads New Targeting Update"
+              class="blog-thumb-img" loading="lazy">
+          </div>
+          <div class="blog-content">
+            <div class="blog-meta-row">
+              <span class="blog-category-tag">Paid Ads</span>
+              <span class="blog-date">Mar 12, 2026</span>
+            </div>
+            <h2 class="blog-item-title">
+              <a href="https://takees.in/meta-ads-new-targeting-update/">Meta Ads New Targeting Update: Describe Your Audience</a>
+            </h2>
+            <p class="blog-item-excerpt">
+              Meta Ads' new targeting update lets advertisers describe their audience instead of relying only on manual targeting. Learn how it's working!
+            </p>
+            <a href="https://takees.in/meta-ads-new-targeting-update/" class="blog-read-link">
+              Read Article <span class="btn-arrow-icon">↗</span>
+            </a>
+          </div>
+        </article>
+
+        <!-- Blog 4: Feb 14, 2026 - How Does Instagram Search Engine Work? -->
+        <article class="blog-card" data-category="social">
+          <div class="blog-thumb-box">
+            <img src="assets/images/blogs/how-does-instagram-search-engine-work.svg"
+              alt="How Does Instagram Search Engine Work?"
+              class="blog-thumb-img" loading="lazy">
+          </div>
+          <div class="blog-content">
+            <div class="blog-meta-row">
+              <span class="blog-category-tag">Social Media</span>
+              <span class="blog-date">Feb 14, 2026</span>
+            </div>
+            <h2 class="blog-item-title">
+              <a href="https://takees.in/how-does-instagram-search-engine-work-guide/">How Does Instagram Search Engine Work? | 2026 Guide</a>
+            </h2>
+            <p class="blog-item-excerpt">
+              How does Instagram search engine work? Learn how Instagram search works and how to use SEO-friendly keywords to rank your page.
+            </p>
+            <a href="https://takees.in/how-does-instagram-search-engine-work-guide/" class="blog-read-link">
+              Read Article <span class="btn-arrow-icon">↗</span>
+            </a>
+          </div>
+        </article>
+
+        <!-- Blog 5: Jan 12, 2026 - What is 70/20/10 Rule in Digital Marketing? -->
         <article class="blog-card" data-category="seo">
           <div class="blog-thumb-box">
-            <img src="assets/images/blogs/blog-1.jpg" alt="Best Digital Marketing Agency in Bangalore"
+            <img src="assets/images/blogs/what-is-70-20-10-rule.svg"
+              alt="What is 70/20/10 Rule in Digital Marketing?"
               class="blog-thumb-img" loading="lazy">
           </div>
           <div class="blog-content">
             <div class="blog-meta-row">
               <span class="blog-category-tag">SEO &amp; Growth</span>
-              <span class="blog-date">Sep 2025 • 8 min read</span>
+              <span class="blog-date">Jan 12, 2026</span>
             </div>
             <h2 class="blog-item-title">
-              <a href="blog-details.html">Best Digital Marketing Agency in Bangalore: Complete Guide 2025</a>
+              <a href="https://takees.in/what-is-70-20-10-rule-in-digital-marketing/">What Is 70/20/10 Rule In Digital Marketing? A Simple Guide</a>
             </h2>
             <p class="blog-item-excerpt">
-              How ambitious brands evaluate, select, and scale with digital marketing partners in Bangalore’s
-              hyper-competitive tech landscape.
+              Learn what is 70/20/10 rule in digital marketing, how it works, and how brands use it to balance consistency, growth, and experimentation.
             </p>
-            <a href="blog-details.html" class="blog-read-link">
+            <a href="https://takees.in/what-is-70-20-10-rule-in-digital-marketing/" class="blog-read-link">
               Read Article <span class="btn-arrow-icon">↗</span>
             </a>
           </div>
         </article>
 
-        <!-- Blog 2 -->
+        <!-- Blog 6: Jan 9, 2026 - How Long Does Digital Marketing Take to Show Results -->
         <article class="blog-card" data-category="seo">
           <div class="blog-thumb-box">
-            <img src="assets/images/blogs/blog-2.jpg" alt="How Local Businesses in Kannur Can Rank #1 on Google Maps"
+            <img src="assets/images/blogs/how-long-does-digital-marketing-take-to-show-results.svg"
+              alt="How Long Does Digital Marketing Take to Show Results"
               class="blog-thumb-img" loading="lazy">
           </div>
           <div class="blog-content">
             <div class="blog-meta-row">
-              <span class="blog-category-tag">SEO</span>
-              <span class="blog-date">Aug 2025 • 6 min read</span>
+              <span class="blog-category-tag">SEO &amp; Growth</span>
+              <span class="blog-date">Jan 9, 2026</span>
             </div>
             <h2 class="blog-item-title">
-              <a href="blog-details.html">How Local Businesses in Kannur Can Rank #1 on Google Maps</a>
+              <a href="https://takees.in/how-long-does-digital-marketing-take-to-show-results/">How Long Does Digital Marketing Take To Show Results?</a>
             </h2>
             <p class="blog-item-excerpt">
-              The exact local citation, review generation, and geographic schema strategy that helped our North Kerala
-              clients dominate regional search.
+              How long does digital marketing take to show results? Learn realistic timelines for SEO, social media, ads, and content marketing. Read More!
             </p>
-            <a href="blog-details.html" class="blog-read-link">
+            <a href="https://takees.in/how-long-does-digital-marketing-take-to-show-results/" class="blog-read-link">
               Read Article <span class="btn-arrow-icon">↗</span>
             </a>
           </div>
         </article>
 
-        <!-- Blog 3 -->
-        <article class="blog-card" data-category="ads">
-          <div class="blog-thumb-box">
-            <img src="assets/images/blogs/blog-3.jpg" alt="Scaling Meta Ads in 2025" class="blog-thumb-img"
-              loading="lazy">
-          </div>
-          <div class="blog-content">
-            <div class="blog-meta-row">
-              <span class="blog-category-tag">Paid Ads</span>
-              <span class="blog-date">Aug 2025 • 7 min read</span>
-            </div>
-            <h2 class="blog-item-title">
-              <a href="blog-details.html">Scaling Meta Ads in 2025: Moving from ₹50,000 to ₹10 Lakhs Monthly Spend</a>
-            </h2>
-            <p class="blog-item-excerpt">
-              Overcoming ad fatigue, Advantage+ audience restructuring, and video creative testing frameworks that keep
-              ROAS above 3.8x.
-            </p>
-            <a href="blog-details.html" class="blog-read-link">
-              Read Article <span class="btn-arrow-icon">↗</span>
-            </a>
-          </div>
-        </article>
-
-        <!-- Blog 4 -->
-        <article class="blog-card" data-category="ai">
-          <div class="blog-thumb-box">
-            <img src="assets/images/blogs/blog-4.jpg" alt="AI Tools Marketers Actually Need" class="blog-thumb-img"
-              loading="lazy">
-          </div>
-          <div class="blog-content">
-            <div class="blog-meta-row">
-              <span class="blog-category-tag">AI Marketing</span>
-              <span class="blog-date">Jul 2025 • 5 min read</span>
-            </div>
-            <h2 class="blog-item-title">
-              <a href="blog-details.html">AI Tools Marketers Actually Need: Cutting Through the Noise</a>
-            </h2>
-            <p class="blog-item-excerpt">
-              We tested 40+ generative AI tools for copy, video, and image workflows. Here are the 6 that deliver
-              measurable productivity improvements.
-            </p>
-            <a href="blog-details.html" class="blog-read-link">
-              Read Article <span class="btn-arrow-icon">↗</span>
-            </a>
-          </div>
-        </article>
-
-        <!-- Blog 5 -->
-        <article class="blog-card" data-category="web">
-          <div class="blog-thumb-box">
-            <img src="assets/images/blogs/blog-5.jpg" alt="Why High-Speed Websites Outperform Pretty Websites"
-              class="blog-thumb-img" loading="lazy">
-          </div>
-          <div class="blog-content">
-            <div class="blog-meta-row">
-              <span class="blog-category-tag">Web Development</span>
-              <span class="blog-date">Jul 2025 • 6 min read</span>
-            </div>
-            <h2 class="blog-item-title">
-              <a href="blog-details.html">Why High-Speed Websites Outperform Pretty Websites Every Single Time</a>
-            </h2>
-            <p class="blog-item-excerpt">
-              Every 1-second delay in page load drops conversion rates by 7%. Why performance engineering matters more
-              than flashy templates.
-            </p>
-            <a href="blog-details.html" class="blog-read-link">
-              Read Article <span class="btn-arrow-icon">↗</span>
-            </a>
-          </div>
-        </article>
-
-        <!-- Blog 6 -->
+        <!-- Blog 7: Dec 18, 2025 - Latest Instagram Updates -->
         <article class="blog-card" data-category="social">
           <div class="blog-thumb-box">
-            <img src="assets/images/blogs/blog-6.jpg" alt="Short-Form Video Architecture" class="blog-thumb-img"
-              loading="lazy">
+            <img src="assets/images/blogs/latest-instagram-updates.svg"
+              alt="Latest Instagram Updates"
+              class="blog-thumb-img" loading="lazy">
           </div>
           <div class="blog-content">
             <div class="blog-meta-row">
               <span class="blog-category-tag">Social Media</span>
-              <span class="blog-date">Jun 2025 • 5 min read</span>
+              <span class="blog-date">Dec 18, 2025</span>
             </div>
             <h2 class="blog-item-title">
-              <a href="blog-details.html">Short-Form Video Architecture: Anatomy of a 2M View Campaign</a>
+              <a href="https://takees.in/latest-instagram-updates/">Instagram Updates: What’s New | Takees Marketing Blog Post</a>
             </h2>
             <p class="blog-item-excerpt">
-              A teardown of the 3-second hook, visual pacing, and sound design that made our regional hospitality video
-              campaign go viral.
+              Learn about the latest Instagram updates, what has changed, and how these updates impact reach, engagement, and content strategy.
             </p>
-            <a href="blog-details.html" class="blog-read-link">
+            <a href="https://takees.in/latest-instagram-updates/" class="blog-read-link">
+              Read Article <span class="btn-arrow-icon">↗</span>
+            </a>
+          </div>
+        </article>
+
+        <!-- Blog 8: Dec 9, 2025 - Purple Cow Marketing -->
+        <article class="blog-card" data-category="seo">
+          <div class="blog-thumb-box">
+            <img src="assets/images/blogs/purple-cow-marketing.svg"
+              alt="Purple Cow Marketing: How to Make Your Brand Stand Out in a Crowded Market"
+              class="blog-thumb-img" loading="lazy">
+          </div>
+          <div class="blog-content">
+            <div class="blog-meta-row">
+              <span class="blog-category-tag">SEO &amp; Growth</span>
+              <span class="blog-date">Dec 9, 2025</span>
+            </div>
+            <h2 class="blog-item-title">
+              <a href="https://takees.in/purple-cow-theory-what-it-means/">Purple Cow Marketing: How to Make Your Brand Stand Out in a Crowded Market</a>
+            </h2>
+            <p class="blog-item-excerpt">
+              A simple and human friendly explanation of the purple cow theory, why people ask about it, and how brands can use it to stand out.
+            </p>
+            <a href="https://takees.in/purple-cow-theory-what-it-means/" class="blog-read-link">
+              Read Article <span class="btn-arrow-icon">↗</span>
+            </a>
+          </div>
+        </article>
+
+        <!-- Blog 9: Nov 29, 2025 - How to Start Business from Zero: A Simple and Practical Guide -->
+        <article class="blog-card" data-category="seo">
+          <div class="blog-thumb-box">
+            <img src="assets/images/blogs/how-to-start-business-from-zero.svg"
+              alt="How to Start Business from Zero: A Simple and Practical Guide"
+              class="blog-thumb-img" loading="lazy">
+          </div>
+          <div class="blog-content">
+            <div class="blog-meta-row">
+              <span class="blog-category-tag">SEO &amp; Growth</span>
+              <span class="blog-date">Nov 29, 2025</span>
+            </div>
+            <h2 class="blog-item-title">
+              <a href="https://takees.in/how-to-start-business-from-zero-a-practical-guide/">How To Start Business From Zero: Simple Steps For Beginners</a>
+            </h2>
+            <p class="blog-item-excerpt">
+              A clear and simple guide on how to start business from zero, covering planning, branding, marketing and early growth strategies.
+            </p>
+            <a href="https://takees.in/how-to-start-business-from-zero-a-practical-guide/" class="blog-read-link">
+              Read Article <span class="btn-arrow-icon">↗</span>
+            </a>
+          </div>
+        </article>
+
+        <!-- Blog 10: Nov 14, 2025 - Simple Guide: How to Build a Brand -->
+        <article class="blog-card" data-category="social">
+          <div class="blog-thumb-box">
+            <img src="assets/images/blogs/how-to-build-a-brand.svg"
+              alt="Simple Guide: How to Build a Brand"
+              class="blog-thumb-img" loading="lazy">
+          </div>
+          <div class="blog-content">
+            <div class="blog-meta-row">
+              <span class="blog-category-tag">Social Media</span>
+              <span class="blog-date">Nov 14, 2025</span>
+            </div>
+            <h2 class="blog-item-title">
+              <a href="https://takees.in/how-to-build-a-brand-through-social-media-simple-guide/">How To Build A Brand Through Social Media: Simple Guide</a>
+            </h2>
+            <p class="blog-item-excerpt">
+              Learn how to build a brand through social media using simple steps, clear strategies, and practical content ideas. Don't Miss Out!
+            </p>
+            <a href="https://takees.in/how-to-build-a-brand-through-social-media-simple-guide/" class="blog-read-link">
+              Read Article <span class="btn-arrow-icon">↗</span>
+            </a>
+          </div>
+        </article>
+
+        <!-- Blog 11: Nov 5, 2025 - Good News for Jio Users -->
+        <article class="blog-card" data-category="ai">
+          <div class="blog-thumb-box">
+            <img src="assets/images/blogs/good-news-for-jio-users.svg"
+              alt="Good News for Jio Users"
+              class="blog-thumb-img" loading="lazy">
+          </div>
+          <div class="blog-content">
+            <div class="blog-meta-row">
+              <span class="blog-category-tag">AI Marketing</span>
+              <span class="blog-date">Nov 5, 2025</span>
+            </div>
+            <h2 class="blog-item-title">
+              <a href="https://takees.in/good-news-for-jio-users-to-get-gemini-pro-for-free/">How to Add Gemini Pro for All Jio Users | Step-by-Step Guide</a>
+            </h2>
+            <p class="blog-item-excerpt">
+              Learn how to add or claim Gemini Pro for all Jio users with this easy guide. Get free access to Google AI Pro. Why wait! Go and Grab Now!
+            </p>
+            <a href="https://takees.in/good-news-for-jio-users-to-get-gemini-pro-for-free/" class="blog-read-link">
               Read Article <span class="btn-arrow-icon">↗</span>
             </a>
           </div>
@@ -224,6 +652,226 @@
       </div>
     </div>
   </section>
+
+  <script>
+    const blogGrid = document.querySelector(".blogs-grid-3");
+
+    const articleDialog = document.createElement("dialog");
+    articleDialog.className = "blog-article-dialog";
+    articleDialog.setAttribute("aria-labelledby", "blogArticleReaderTitle");
+
+    const dialogHeader = document.createElement("div");
+    dialogHeader.className = "blog-article-dialog-header";
+    const backButton = document.createElement("button");
+    backButton.className = "blog-article-dialog-back";
+    backButton.type = "button";
+    backButton.textContent = "← All articles";
+    const dialogBrand = document.createElement("span");
+    dialogBrand.className = "blog-article-dialog-brand";
+    dialogBrand.textContent = "TAKEES / INSIGHTS";
+    const closeButton = document.createElement("button");
+    closeButton.className = "blog-article-dialog-close";
+    closeButton.type = "button";
+    closeButton.setAttribute("aria-label", "Close article");
+    closeButton.textContent = "×";
+    dialogHeader.append(backButton, dialogBrand, closeButton);
+
+    const reader = document.createElement("div");
+    reader.className = "blog-article-reader";
+    reader.tabIndex = 0;
+    const readerInner = document.createElement("article");
+    readerInner.className = "blog-article-reader-inner";
+    const readerEyebrow = document.createElement("p");
+    readerEyebrow.className = "blog-article-reader-eyebrow";
+    readerEyebrow.textContent = "Takees Marketing Journal";
+    const readerMeta = document.createElement("div");
+    readerMeta.className = "blog-article-reader-meta";
+    const readerCategory = document.createElement("span");
+    readerCategory.className = "blog-article-reader-category";
+    const readerDate = document.createElement("time");
+    readerDate.className = "blog-article-reader-date";
+    readerMeta.append(readerCategory, readerDate);
+    const readerTitle = document.createElement("h1");
+    readerTitle.className = "blog-article-reader-title";
+    readerTitle.id = "blogArticleReaderTitle";
+    const readerCover = document.createElement("div");
+    readerCover.className = "blog-article-reader-cover";
+    readerCover.setAttribute("aria-hidden", "true");
+    const readerImage = document.createElement("img");
+    readerImage.className = "blog-article-reader-image";
+    readerImage.alt = "";
+    readerCover.append(readerImage);
+    const readerContent = document.createElement("div");
+    readerContent.className = "blog-article-reader-content";
+    readerInner.append(readerEyebrow, readerMeta, readerTitle, readerCover, readerContent);
+    reader.append(readerInner);
+    articleDialog.append(dialogHeader, reader);
+    document.body.append(articleDialog);
+
+    let articleRequest;
+    const blockedArticleTags = new Set(["script", "style", "iframe", "object", "embed", "form", "input", "button", "svg", "math"]);
+    const allowedArticleTags = new Set([
+      "p", "br", "h2", "h3", "h4", "ul", "ol", "li", "blockquote", "strong", "b", "em", "i",
+      "a", "img", "figure", "figcaption", "table", "thead", "tbody", "tr", "th", "td", "hr", "pre", "code"
+    ]);
+
+    function addSafeArticleNode(sourceNode, parentNode) {
+      if (sourceNode.nodeType === Node.TEXT_NODE) {
+        parentNode.append(document.createTextNode(sourceNode.textContent));
+        return;
+      }
+
+      if (sourceNode.nodeType !== Node.ELEMENT_NODE) return;
+
+      const tagName = sourceNode.tagName.toLowerCase();
+      if (blockedArticleTags.has(tagName)) return;
+      if (!allowedArticleTags.has(tagName)) {
+        sourceNode.childNodes.forEach(child => addSafeArticleNode(child, parentNode));
+        return;
+      }
+
+      const safeNode = document.createElement(tagName);
+      if (tagName === "a") {
+        const href = sourceNode.getAttribute("href");
+        if (href) {
+          try {
+            const safeUrl = new URL(href, "https://takees.in/");
+            if (safeUrl.protocol === "https:" || safeUrl.protocol === "http:") {
+              safeNode.href = safeUrl.href;
+              safeNode.target = "_blank";
+              safeNode.rel = "noopener noreferrer";
+            }
+          } catch (error) {
+            console.warn("Skipped an invalid link in an article.", error);
+          }
+        }
+      } else if (tagName === "img") {
+        const src = sourceNode.getAttribute("src");
+        if (!src) return;
+        try {
+          const imageUrl = new URL(src, "https://takees.in/");
+          if (imageUrl.protocol !== "https:" || imageUrl.hostname !== "takees.in") return;
+          safeNode.src = imageUrl.href;
+        } catch (error) {
+          console.warn("Skipped an invalid image in an article.", error);
+          return;
+        }
+        safeNode.alt = sourceNode.getAttribute("alt") || "";
+        safeNode.loading = "lazy";
+      }
+
+      sourceNode.childNodes.forEach(child => addSafeArticleNode(child, safeNode));
+      parentNode.append(safeNode);
+    }
+
+    function setReaderStatus(message, retryUrl) {
+      const status = document.createElement("div");
+      status.className = "blog-article-reader-status";
+      status.setAttribute("role", "status");
+      status.setAttribute("aria-live", "polite");
+      const messageText = document.createElement("p");
+      messageText.textContent = message;
+      status.append(messageText);
+      if (retryUrl) {
+        const retryButton = document.createElement("button");
+        retryButton.type = "button";
+        retryButton.textContent = "Try again";
+        retryButton.addEventListener("click", () => loadArticle(retryUrl));
+        status.append(retryButton);
+      }
+      readerContent.replaceChildren(status);
+    }
+
+    async function loadArticle(articleUrl) {
+      articleRequest?.abort();
+      articleRequest = new AbortController();
+      const currentRequest = articleRequest;
+      setReaderStatus("Loading the full article…");
+
+      try {
+        const articleAddress = new URL(articleUrl);
+        if (articleAddress.hostname !== "takees.in" || articleAddress.protocol !== "https:") {
+          throw new Error("This article address is not a valid Takees article.");
+        }
+
+        const slug = articleAddress.pathname.split("/").filter(Boolean).pop();
+        const endpoint = new URL("https://takees.in/wp-json/wp/v2/posts");
+        endpoint.searchParams.set("slug", slug);
+        endpoint.searchParams.set("_fields", "date,title,content");
+        const response = await fetch(endpoint, { signal: currentRequest.signal });
+        if (!response.ok) {
+          throw new Error(`The article could not be loaded (HTTP ${response.status}).`);
+        }
+
+        const posts = await response.json();
+        if (!posts.length || !posts[0].content?.rendered) {
+          throw new Error("The full article content is not available right now.");
+        }
+
+        const post = posts[0];
+        const parsedContent = new DOMParser().parseFromString(post.content.rendered, "text/html");
+        const safeContent = document.createDocumentFragment();
+        parsedContent.body.childNodes.forEach(child => addSafeArticleNode(child, safeContent));
+
+        const leadImage = safeContent.querySelector("img");
+        if (leadImage) {
+          const imageWrapper = leadImage.parentElement;
+          leadImage.remove();
+          if (imageWrapper && ["p", "figure"].includes(imageWrapper.tagName.toLowerCase()) && !imageWrapper.textContent.trim() && !imageWrapper.querySelector("img")) {
+            imageWrapper.remove();
+          }
+        }
+
+        const apiTitle = new DOMParser().parseFromString(post.title.rendered, "text/html").body.textContent.trim();
+        readerTitle.textContent = apiTitle || readerTitle.textContent;
+        const publishedDate = new Date(post.date);
+        if (!Number.isNaN(publishedDate.getTime())) {
+          readerDate.dateTime = publishedDate.toISOString();
+          readerDate.textContent = new Intl.DateTimeFormat("en", {
+            year: "numeric",
+            month: "long",
+            day: "numeric",
+            timeZone: "UTC"
+          }).format(publishedDate);
+        }
+        readerContent.replaceChildren(safeContent);
+      } catch (error) {
+        if (error.name === "AbortError") return;
+        console.error("Unable to load the full Takees article.", error);
+        setReaderStatus("We couldn't load this article just now. Check your connection and try again.", articleUrl);
+      }
+    }
+
+    blogGrid.addEventListener("click", event => {
+      const articleLink = event.target.closest(".blog-item-title a, .blog-read-link");
+      if (!articleLink) return;
+
+      event.preventDefault();
+      const card = articleLink.closest(".blog-card");
+      readerTitle.textContent = card.querySelector(".blog-item-title").textContent.trim();
+      readerCategory.textContent = card.querySelector(".blog-category-tag").textContent.trim();
+      readerDate.textContent = card.querySelector(".blog-date").textContent.trim();
+      readerDate.removeAttribute("datetime");
+      readerImage.src = card.querySelector(".blog-thumb-img").src;
+      readerImage.alt = card.querySelector(".blog-thumb-img").alt;
+      reader.scrollTop = 0;
+      articleDialog.showModal();
+      backButton.focus();
+      loadArticle(articleLink.href);
+    });
+
+    backButton.addEventListener("click", () => articleDialog.close());
+    closeButton.addEventListener("click", () => articleDialog.close());
+    articleDialog.addEventListener("click", event => {
+      if (event.target === articleDialog) articleDialog.close();
+    });
+    articleDialog.addEventListener("close", () => {
+      articleRequest?.abort();
+      readerContent.replaceChildren();
+      readerImage.removeAttribute("src");
+      readerImage.alt = "";
+    });
+  </script>
 
   <!-- =========================================================================
        NEWSLETTER / STRATEGY CTA BANNER
