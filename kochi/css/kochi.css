@@ -1,0 +1,279 @@
+body.kochi-page {
+  --primary: #582AA6;
+  --primary-hover: #48218A;
+  --primary-deep: #351765;
+  --primary-glow: rgba(88, 42, 166, 0.35);
+  --shadow-purple: 0 12px 36px rgba(88, 42, 166, 0.28);
+  --shadow-card-hover: 0 16px 40px rgba(88, 42, 166, 0.12);
+}
+
+.kochi-page .kochi-hero {
+  min-height: 560px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 76px 24px;
+  background: #fbfafc;
+}
+
+.kochi-page .kochi-hero > .container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 0;
+  padding: 32px 24px;
+}
+
+.kochi-page .kochi-hero .hero-content {
+  max-width: 1240px;
+  margin: 0 auto;
+  text-align: center;
+}
+
+.kochi-page .kochi-hero .hero-content > .kicker {
+  margin-bottom: 22px;
+}
+
+.kochi-page .kochi-hero .hero-heading {
+  max-width: 1240px;
+  margin: 0 auto 26px;
+  font-family: 'TASA Orbiter', sans-serif;
+  font-size: clamp(2.8rem, 5.3vw, 4.1rem);
+  font-weight: 600;
+  line-height: 1.15;
+  letter-spacing: -0.035em;
+  text-align: center;
+}
+
+.kochi-page .kochi-hero .hero-description {
+  max-width: 760px;
+  margin: 0 auto;
+  font-size: 1.15rem;
+  line-height: 1.7;
+}
+
+.kochi-page .kochi-hero .hero-actions {
+  display: flex;
+  justify-content: center;
+  margin-top: 30px;
+}
+
+.kochi-page .kochi-hero .btn.btn-primary {
+  padding: 16px 30px;
+  border: 1px solid rgba(255, 255, 255, 0.16);
+  border-radius: 999px;
+  background: var(--primary);
+  box-shadow: 0 10px 26px rgba(88, 42, 166, 0.25);
+  color: #fff;
+  font-weight: 600;
+  transition: transform 220ms ease, background-color 220ms ease, box-shadow 220ms ease;
+}
+
+.kochi-page .kochi-hero .btn.btn-primary:hover {
+  transform: translateY(-2px);
+  background: var(--primary-hover);
+  box-shadow: 0 14px 30px rgba(72, 33, 138, 0.3);
+  color: #fff;
+}
+
+.kochi-page .kochi-hero .btn.btn-primary:focus-visible {
+  outline: 3px solid rgba(88, 42, 166, 0.35);
+  outline-offset: 4px;
+}
+
+.kochi-about-section {
+  padding: 80px 36px;
+  background: radial-gradient(ellipse at 0% 48%, rgba(88, 42, 166, 0.28), transparent 36%), radial-gradient(ellipse at 100% 58%, rgba(88, 42, 166, 0.2), transparent 34%), #0d0b12;
+}
+
+.kochi-about-section .container {
+  max-width: 1520px;
+}
+
+.kochi-about-panel {
+  position: relative;
+  overflow: hidden;
+  max-width: none;
+  margin: 0 auto;
+  padding: 68px clamp(28px, 7vw, 92px);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 32px;
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.065), rgba(255, 255, 255, 0.012) 68%), #15131b;
+  color: #fff;
+}
+
+.kochi-about-panel > * { position: relative; z-index: 1; }
+
+.kochi-about-panel h2 {
+  margin: 12px 0 16px;
+  font-size: clamp(2rem, 4vw, 2.75rem);
+  line-height: 1.12;
+}
+
+.kochi-about-panel > p:not(.kochi-about-services) {
+  max-width: 800px;
+  color: rgba(255, 255, 255, 0.78);
+  font-size: 1.125rem;
+  line-height: 1.7;
+}
+
+.kochi-about-services {
+  max-width: 900px;
+  margin: 22px 0 26px;
+  color: rgba(255, 255, 255, 0.92);
+  font-size: 0.98rem;
+  line-height: 1.9;
+}
+
+.kochi-about-services span { padding: 0 5px; color: #bda5e7; }
+.kochi-about-panel .btn-white { color: var(--text-main); }
+
+.kochi-brand-statement {
+  overflow: hidden;
+  padding: 96px 0;
+  background: #faf9fc;
+}
+
+.kochi-brand-layout {
+  display: grid;
+  grid-template-columns: minmax(0, 1.25fr) minmax(250px, 0.75fr);
+  gap: 70px;
+  align-items: center;
+}
+
+.kochi-brand-copy h2 {
+  max-width: 780px;
+  margin: 18px 0 20px;
+  font-size: clamp(2.5rem, 5vw, 3.5rem);
+  line-height: 1.08;
+}
+
+.kochi-brand-copy h2 span { color: var(--primary); }
+
+.kochi-brand-copy p {
+  max-width: 640px;
+  color: var(--text-muted);
+  font-size: 1.05rem;
+  line-height: 1.75;
+}
+
+.kochi-orbit {
+  position: relative;
+  width: min(100%, 300px);
+  aspect-ratio: 1;
+  justify-self: center;
+  border: 1px solid rgba(88, 42, 166, 0.2);
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(88, 42, 166, 0.13), transparent 67%);
+}
+
+.kochi-orbit::before,
+.kochi-orbit::after {
+  position: absolute;
+  inset: 13%;
+  border: 1px solid rgba(88, 42, 166, 0.2);
+  border-radius: 50%;
+  content: '';
+}
+
+.kochi-orbit::after { inset: 28%; border-style: dashed; }
+
+.orbit-core,
+.orbit-label {
+  position: absolute;
+  z-index: 1;
+  display: grid;
+  place-items: center;
+  border-radius: 50%;
+  background: #fff;
+  box-shadow: 0 8px 24px rgba(35, 18, 64, 0.12);
+}
+
+.orbit-core {
+  inset: 37%;
+  background: var(--primary);
+  color: #fff;
+  font-size: 2rem;
+  font-weight: 700;
+}
+
+.orbit-label {
+  width: 68px;
+  aspect-ratio: 1;
+  color: var(--primary-deep);
+  font-size: 0.68rem;
+  font-weight: 700;
+}
+
+.orbit-idea { top: 2%; left: calc(50% - 34px); }
+.orbit-reach { right: 0; bottom: 20%; }
+.orbit-grow { bottom: 20%; left: 0; }
+
+.kochi-stats-section {
+  padding: 72px 0 84px;
+  background: #170f20;
+  color: #fff;
+}
+
+.kochi-stats-section .section-title-wrap { margin-bottom: 38px; }
+.kochi-stats-section .section-title { color: #fff; }
+
+.kochi-stats-grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 1px;
+  border-top: 1px solid rgba(255, 255, 255, 0.16);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.16);
+}
+
+.kochi-stat {
+  display: grid;
+  gap: 7px;
+  padding: 25px 18px;
+  text-align: center;
+}
+
+.kochi-stat + .kochi-stat { border-left: 1px solid rgba(255, 255, 255, 0.16); }
+.kochi-stat strong { color: #c7a9ff; font-size: 2.25rem; line-height: 1; }
+.kochi-stat span { color: rgba(255, 255, 255, 0.72); font-size: 0.9rem; }
+
+#kochiServices .service-item-box {
+  opacity: 0;
+  transform: translateY(30px) scale(0.97);
+  transition: opacity 650ms cubic-bezier(0.16, 1, 0.3, 1),
+    transform 650ms cubic-bezier(0.16, 1, 0.3, 1),
+    background-color 300ms ease, border-color 300ms ease, box-shadow 300ms ease;
+  transition-delay: calc(var(--stagger-index, 0) * 110ms);
+  will-change: opacity, transform;
+}
+
+#kochiServices .service-item-box:nth-child(7) { transition-delay: 660ms; }
+#kochiServices .service-item-box:nth-child(8) { transition-delay: 770ms; }
+
+#kochiServices .service-item-box:hover {
+  transform: translateY(-4px) scale(1) !important;
+  box-shadow: 0 14px 32px rgba(91, 43, 181, 0.16);
+  transition-delay: 0ms;
+}
+
+@media (max-width: 1023px) {
+  .kochi-brand-layout { gap: 42px; }
+}
+
+@media (max-width: 767px) {
+  .kochi-page .kochi-hero { min-height: 490px; padding: 54px 12px; }
+  .kochi-page .kochi-hero > .container { padding: 24px 12px; }
+  .kochi-page .kochi-hero .hero-heading { font-size: clamp(2.65rem, 11vw, 3.4rem); }
+  .kochi-page .kochi-hero .hero-description { font-size: 1rem; }
+  .kochi-about-section { padding: 48px 16px; }
+  .kochi-about-section .container { padding-left: 0; padding-right: 0; }
+  .kochi-about-panel { padding: 46px 24px; border-radius: 24px; }
+  .kochi-brand-statement { padding: 70px 0; }
+  .kochi-brand-layout { grid-template-columns: 1fr; gap: 38px; }
+  .kochi-orbit { width: min(72vw, 260px); }
+  .kochi-stats-section { padding: 58px 0 64px; }
+  .kochi-stats-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .kochi-stat:nth-child(3),
+  .kochi-stat:nth-child(4) { border-top: 1px solid rgba(255, 255, 255, 0.16); }
+  .kochi-stat:nth-child(3) { border-left: 0; }
+}

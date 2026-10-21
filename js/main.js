@@ -319,16 +319,15 @@ function initSmoothScroll() {
  */
 
 /**
- * 1. Hero Headline Word-by-Word Reveal & Upward Fade
+ * 1. H1 Word-by-Word Reveal & Upward Fade
  */
 function initHeroHeadlineReveal() {
   if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
 
-  const heroHeadings = Array.from(document.querySelectorAll('.hero-heading, .dark-hero .section-title'))
-    .filter(heading => !heading.closest('.home-hero'));
-  if (!heroHeadings.length) return;
+  const headings = document.querySelectorAll('h1');
+  if (!headings.length) return;
 
-  heroHeadings.forEach(heading => {
+  headings.forEach(heading => {
     if (heading.dataset.wordWrapped) return;
     heading.dataset.wordWrapped = 'true';
 

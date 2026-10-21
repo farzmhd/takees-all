@@ -18,8 +18,15 @@ const MIME_TYPES = {
 
 const server = http.createServer((req, res) => {
   let reqUrl = req.url.split('?')[0].replace(/%20/g, ' ');
-  if (reqUrl === '/') reqUrl = '/index.html';
-  
+
+  // Location sites live in subfolders (kochi/, bangalore/)
+  if (!reqUrl.endsWith('/') && !path.extname(reqUrl) &&
+      fs.existsSync(path.join(__dirname, reqUrl, 'index.html'))) {
+    res.writeHead(301, { Location: reqUrl + '/' });
+    return res.end();
+  }
+  if (reqUrl.endsWith('/')) reqUrl += 'index.html';
+
   const filePath = path.join(__dirname, reqUrl);
   const ext = path.extname(filePath).toLowerCase();
   const contentType = MIME_TYPES[ext] || 'application/octet-stream';
