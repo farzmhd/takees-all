@@ -83,7 +83,7 @@ AddType font/woff     .woff
 # ----------------------------------------------------------
 #  Prevent access to hidden/dot files
 # ----------------------------------------------------------
-<FilesMatch "^\.">
+<FilesMatch "^\\.">
   Order allow,deny
   Deny from all
 </FilesMatch>
