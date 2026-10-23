@@ -56,6 +56,7 @@ function initClients() {
     isExpanded = expanded;
     toggle.setAttribute('aria-expanded', String(expanded));
     toggle.textContent = expanded ? 'Hide Clients' : 'Show Clients';
+    toggle.classList.toggle('is-active', expanded);
     results.textContent = expanded
       ? `Showing all ${cards.length} clients`
       : 'Click Show Clients to view our clients';
@@ -63,16 +64,11 @@ function initClients() {
     panel.classList.toggle('is-expanded', expanded);
     panel.inert = !expanded;
     section.classList.toggle('is-collapsed', !expanded);
-    panel.style.removeProperty('height');
   };
 
   updateDisclosure(isExpanded);
 
   toggle.addEventListener('click', () => {
-    cards.forEach(card => {
-      card.hidden = false;
-    });
-    toggle.classList.add('is-active');
     updateDisclosure(!isExpanded);
   });
 }
